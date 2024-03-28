@@ -20,6 +20,7 @@ import static edu.upc.talent.swqa.test.utils.Asserts.assertEquals;
 import static edu.upc.talent.swqa.util.Utils.plus;
 import static edu.upc.talent.swqa.util.Utils.union;
 import static org.junit.Assert.assertThrows;
+import static org.junit.Assert.assertTrue;
 
 import org.junit.jupiter.api.Test;
 
@@ -138,6 +139,22 @@ public final class CampusAppEndToEndTest extends DatabaseBackedTest {
     assertThrows(UserNotTeacherException.class, () -> {
       app.sendEmailToTeacherById(nonTeacherUserId, "Meeting Reminder", "Please prepare the monthly report.");
     });
+  }
+
+  @Test
+  public void testSuccessfullySendingEmailToTeacher() {
+    // Arrange: Setup with a known teacher user ID
+    var app = getApp(defaultInitialState);
+    var teacherUserId = "3"; // Assuming "Mariah Hairam" is a teacher
+    var subject = "Your Teaching Schedule";
+    var body = "Here is your teaching schedule for the next semester.";
+
+    // Act: Send the email to the teacher
+    app.sendEmailToTeacherById(teacherUserId, subject, body);
+
+    // Assert: Verify the email was sent successfully
+    var expectedEmail = new SentEmail(mariahHairam.email(), subject, body);
+    assertTrue(emailServiceState.contains(expectedEmail)); // Assuming `emailServiceState` tracks sent emails
   }
 
 }
