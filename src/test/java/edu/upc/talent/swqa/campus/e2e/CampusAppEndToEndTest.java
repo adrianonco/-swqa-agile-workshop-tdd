@@ -86,4 +86,21 @@ public final class CampusAppEndToEndTest extends DatabaseBackedTest {
     assertEquals(expectedState, getFinalState());
   }
 
+  @Test
+  public void testSendEmailToTeacherById() {
+    // Arrange: Set up the application state and identify a teacher by ID
+    var app = getApp(defaultInitialState);
+    var teacherId = "3"; // Identified Mariah Hairam as the teacher
+    var subject = "Meeting Reminder";
+    var body = "Don't forget about the meeting tomorrow at 10 AM.";
+
+    // Act: Attempt to send an email to the identified teacher
+    app.sendEmailToTeacherById(teacherId, subject, body);
+
+    // Assert: Verify that the expected email was sent
+    var expectedEmail = new SentEmail(mariahHairam.email(), subject, body);
+    var sentEmails = emailServiceState;
+    assertEquals(Set.of(expectedEmail), sentEmails);
+  }
+
 }
