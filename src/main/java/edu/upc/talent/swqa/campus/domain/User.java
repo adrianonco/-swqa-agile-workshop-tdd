@@ -16,4 +16,9 @@ public record User(
   public LocalDate createdDate() {
     return LocalDate.ofInstant(createdAt, ZoneId.systemDefault());
   }
+
+  // Method for checking user's role
+  public boolean hasRole(String role) {
+    return this.role.equals(role);
+  }
 }

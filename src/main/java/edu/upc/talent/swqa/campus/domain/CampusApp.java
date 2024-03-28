@@ -93,7 +93,8 @@ public final class CampusApp {
     try {
       User user = usersRepository.getUserById(id);
       // Assuming the role of a teacher is identified by the string "teacher"
-      if (!"teacher".equals(user.role())) {
+      // CampusApp.java: Applied specific role for users
+      if (!user.hasRole("teacher")) {
         // Ensuring user is a teacher
         throw new UserNotTeacherException(id);
       }
