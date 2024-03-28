@@ -74,6 +74,7 @@ public final class CampusApp {
   }
  */
 
+  /*
   // CampusApp.java: Update including custom exception classes
   public void sendEmailToTeacherById(String id, String subject, String body) {
     try {
@@ -86,5 +87,20 @@ public final class CampusApp {
       throw e;
     }
   }
+   */
 
+  public void sendEmailToTeacherById(String id, String subject, String body) {
+    try {
+      User user = usersRepository.getUserById(id);
+      // Assuming the role of a teacher is identified by the string "teacher"
+      if (!"teacher".equals(user.role())) {
+        // Ensuring user is a teacher
+        throw new UserNotTeacherException(id);
+      }
+      // Proceed to send the email
+      emailService.sendEmail(user, subject, body);
+    } catch (UserNotFoundException e) {
+      throw e;
+    }
+  }
 }

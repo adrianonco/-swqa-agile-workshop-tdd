@@ -2,6 +2,7 @@ package edu.upc.talent.swqa.campus.e2e;
 
 import edu.upc.talent.swqa.campus.domain.CampusApp;
 import edu.upc.talent.swqa.campus.domain.exception.UserNotFoundException;
+import edu.upc.talent.swqa.campus.domain.exception.UserNotTeacherException;
 import edu.upc.talent.swqa.campus.domain.test.InMemoryEmailService;
 import edu.upc.talent.swqa.campus.infrastructure.PostgreSqlUsersRepository;
 import edu.upc.talent.swqa.campus.infrastructure.test.PostgreSqlUsersRepositoryTestHelper;
@@ -124,6 +125,19 @@ public final class CampusAppEndToEndTest extends DatabaseBackedTest {
 
     // Verify the correct exception message is thrown
     assertEquals("User 9999 does not exist", exception.getMessage());
+  }
+
+  @Test
+  public void testSendEmailToUserWhoIsNotTeacherThrowsException() {
+    // Arrange: Setup with a known non-teacher user ID
+    var app = getApp(defaultInitialState);
+    var nonTeacherUserId = "1"; // Assuming John Doe is not a teacher
+
+    // Act & Assert: Verify that trying to send an email to a non-teacher
+    // throws an exception
+    assertThrows(UserNotTeacherException.class, () -> {
+      app.sendEmailToTeacherById(nonTeacherUserId, "Meeting Reminder", "Please prepare the monthly report.");
+    });
   }
 
 }
