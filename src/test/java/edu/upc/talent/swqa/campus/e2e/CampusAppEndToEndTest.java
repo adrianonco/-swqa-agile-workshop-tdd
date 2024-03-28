@@ -154,7 +154,8 @@ public final class CampusAppEndToEndTest extends DatabaseBackedTest {
 
     // Assert: Verify the email was sent successfully
     var expectedEmail = new SentEmail(mariahHairam.email(), subject, body);
-    assertTrue(emailServiceState.contains(expectedEmail)); // Assuming `emailServiceState` tracks sent emails
+    // Assuming `emailServiceState` tracks sent emails
+    assertTrue(emailServiceState.contains(expectedEmail));
   }
 
 }

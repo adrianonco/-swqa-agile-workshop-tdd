@@ -89,7 +89,7 @@ public final class CampusApp {
   }
    */
 
-  public void sendEmailToTeacherById(String id, String subject, String body) {
+  /*public void sendEmailToTeacherById(String id, String subject, String body) {
     try {
       User user = usersRepository.getUserById(id);
       // Assuming the role of a teacher is identified by the string "teacher"
@@ -103,5 +103,20 @@ public final class CampusApp {
     } catch (UserNotFoundException e) {
       throw e;
     }
+  }*/
+
+  // CampusApp.java: Break down method and separate user validation from email sending
+  public void sendEmailToTeacherById(String id, String subject, String body) {
+    User user = validateTeacherById(id);
+    emailService.sendEmail(user, subject, body);
   }
+
+  private User validateTeacherById(String id) {
+    User user = usersRepository.getUserById(id);
+    if (!user.hasRole("teacher")) {
+      throw new UserNotTeacherException(id);
+    }
+    return user;
+  }
+
 }
