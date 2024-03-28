@@ -9,4 +9,9 @@ public interface UsersRepository {
   void createUser(final String id, final String name, final String surname, final String email, final String role, final String groupName);
 
   void createGroup(final String id, final String name);
+
+  // UserRepository.java: Method declaration to retrieve a User object
+  // by their unique identifier (ID).
+  User getUserById(String id);
+
 }

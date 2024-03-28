@@ -1,6 +1,7 @@
 package edu.upc.talent.swqa.campus.e2e;
 
 import edu.upc.talent.swqa.campus.domain.CampusApp;
+import edu.upc.talent.swqa.campus.domain.exception.UserNotFoundException;
 import edu.upc.talent.swqa.campus.domain.test.InMemoryEmailService;
 import edu.upc.talent.swqa.campus.infrastructure.PostgreSqlUsersRepository;
 import edu.upc.talent.swqa.campus.infrastructure.test.PostgreSqlUsersRepositoryTestHelper;
@@ -17,6 +18,8 @@ import edu.upc.talent.swqa.jdbc.test.utils.DatabaseBackedTest;
 import static edu.upc.talent.swqa.test.utils.Asserts.assertEquals;
 import static edu.upc.talent.swqa.util.Utils.plus;
 import static edu.upc.talent.swqa.util.Utils.union;
+import static org.junit.Assert.assertThrows;
+
 import org.junit.jupiter.api.Test;
 
 import java.util.HashSet;
@@ -101,6 +104,26 @@ public final class CampusAppEndToEndTest extends DatabaseBackedTest {
     var expectedEmail = new SentEmail(mariahHairam.email(), subject, body);
     var sentEmails = emailServiceState;
     assertEquals(Set.of(expectedEmail), sentEmails);
+  }
+
+  @Test
+  public void testSendEmailToNonExistentTeacherByIdThrowsException() {
+    // CampusAppEndToEndTest.java
+    // Arrange: Set up with an ID known not to exist in the system
+    var app = getApp(defaultInitialState);
+    var nonExistentTeacherId = "9999";
+    var subject = "Meeting Reminder";
+    var body = "Don't forget about the meeting tomorrow at 10 AM.";
+
+    // Act & Assert: Attempt to send an email and expect a UserNotFoundException
+    // CampusAppEndToEndTest.java: Change RuntimeException
+    // to UserNotFoundException(id)
+    Exception exception = assertThrows(UserNotFoundException.class, () -> {
+      app.sendEmailToTeacherById(nonExistentTeacherId, subject, body);
+    });
+
+    // Verify the correct exception message is thrown
+    assertEquals("User 9999 does not exist", exception.getMessage());
   }
 
 }

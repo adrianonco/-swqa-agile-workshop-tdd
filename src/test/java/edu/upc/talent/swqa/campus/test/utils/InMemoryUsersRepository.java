@@ -7,6 +7,7 @@ import static edu.upc.talent.swqa.util.Utils.now;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.NoSuchElementException;
 
 public record InMemoryUsersRepository(UsersRepositoryState state) implements UsersRepository {
 
@@ -52,4 +53,18 @@ public record InMemoryUsersRepository(UsersRepositoryState state) implements Use
                 ))
                 .toList();
   }
+
+  @Override
+  public User getUserById(String id) {
+    // InMemoryUsersRepository.java: Retrieves a user by their ID from an in-memory state.
+    // Initiates a stream from the collection of users in the in-memory state.
+    return state.users().stream()
+            // Filters the stream to only include the user with the matching ID.
+            .filter(user -> user.id().equals(id))
+            // Attempts to find the first (and should be only) user in the stream after filtering.
+            .findFirst()
+            // Throws an exception if no user matches the provided ID.
+            .orElseThrow(() -> new NoSuchElementException("User " + id + " does not exist"));
+  }
+
 }

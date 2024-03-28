@@ -1,5 +1,7 @@
 package edu.upc.talent.swqa.campus.domain;
 
+import edu.upc.talent.swqa.campus.domain.exception.UserNotFoundException;
+import edu.upc.talent.swqa.campus.domain.exception.UserNotTeacherException;
 import edu.upc.talent.swqa.campus.infrastructure.PostgreSqlUsersRepository;
 import edu.upc.talent.swqa.campus.infrastructure.SmtpEmailService;
 import edu.upc.talent.swqa.jdbc.Database;
@@ -64,4 +66,25 @@ public final class CampusApp {
     users.stream().filter(u -> u.role().equals(roleName))
           .forEach(u -> emailService.sendEmail(u, subject, body));
   }
+/*
+  // CampusApp.java: Implement the method to send an email to a teacher by ID
+  public void sendEmailToTeacherById(String id, String subject, String body) {
+    var user = usersRepository.getUserById(id); // Retrieve the user by ID
+    emailService.sendEmail(user, subject, body); // Send the email
+  }
+ */
+
+  // CampusApp.java: Update including custom exception classes
+  public void sendEmailToTeacherById(String id, String subject, String body) {
+    try {
+      User user = usersRepository.getUserById(id);
+      // Here, you would add a check for the user's role being "teacher"
+      // and potentially throw UserNotTeacherException if not
+      emailService.sendEmail(user, subject, body);
+    } catch (UserNotFoundException | UserNotTeacherException e) {
+      // Handle or rethrow the exception as appropriate for your application
+      throw e;
+    }
+  }
+
 }
